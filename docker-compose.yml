@@ -1,0 +1,19 @@
+version: "3.9"
+services:
+  gitea:
+    image: gitea/gitea:1.22
+    ports: ["3000:3000", "222:22"]
+    volumes: ["gitea:/data"]
+  drone:
+    image: drone/drone:2
+    ports: ["3001:80"]
+    environment:
+      - DRONE_GITEA_SERVER=http://gitea:3000
+      - DRONE_RPC_SECRET=changeme
+    depends_on: [gitea]
+  harbor:
+    image: goharbor/harbor-core:v2.10.0
+    # For brevity, Harbor normally requires multiple containers; treat this as placeholder.
+    ports: ["4443:443"]
+volumes:
+  gitea:
